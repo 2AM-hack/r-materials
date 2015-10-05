@@ -1,0 +1,99 @@
+---
+title: "Starting with data"
+author: "Najko Jahn"
+date: "5. Oktober 2015"
+output:
+  html_document:
+    keep_md: true
+---
+
+Adapted and re-used from : [Data carpentry -- Starting with R for data analysis](https://github.com/datacarpentry/R-ecology)
+
+# Skills
+
+* Load spreadsheets into R
+* Explore the nature of the datasets
+* Store data on your local disk
+
+In many cases, you will work with data. R supports several ways of loading datasets. One is to fetch spreadsheets from the web.
+
+## Spreadsheet data
+
+Let's download journal metadata from the Directory of Open Access Jorunals into our data folder by using `curl` methods.
+
+```{r}
+download.file("https://doaj.org/csv", "examplesdoaj.csv", method = "curl")
+```
+
+Load the dataset into R console with `read.csv`
+
+```{r}
+doaj <- read.csv(file = "examples/doaj.csv", sep = ",", header = TRUE)
+```
+
+Show the first six rows
+
+```{r}
+head(doaj)
+```
+
+How many rows and columns has the dataset?
+
+```{r}
+dim(doaj)
+```
+
+Show the column names
+
+```{r}
+names(doaj)
+```
+
+To compactly display the structure of arbitrary R objects use `str`
+
+```{r}
+str(doaj)
+```
+
+**Task 1**: 
+Load in the spreadsheet examples/neuro-scimago.csv.
+
+Based on the output of `str(neuro)`, can you answer the following questions?**
+
+* What is the class of the object `neuro`?
+* How many different publishers does the Directory of Open Access Journals spreadsheet contain?
+
+
+## Working with empty cells
+
+Empty cells often affect your analysis. R discriminate missing values with `NA`
+
+```{r}
+x <- c(2:20, NA)
+mean(x)
+mean(x, na.rm = TRUE)
+```
+
+As you have may noticed, the `doaj` dataset has empty cells not designated as `NA`
+
+```{r}
+head(doaj)
+```
+
+To take care that empty cells are corectly loaded into R, use the `na.strings` option
+
+```{r}
+doaj <- read.csv(file = "examples/doaj.csv", sep = ",", header = TRUE, na.strings = "")
+head(doaj)
+```
+
+## Saving datasets
+
+To print your data to a `csv` file, use the `write.csv` command.
+
+```{r}
+write.csv(doaj, file = "examples/backup-doaj.csv")
+```
+
+
+

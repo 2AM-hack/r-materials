@@ -1,0 +1,204 @@
+---
+title: "Working with dplyr"
+author: "Najko Jahn"
+date: "5. October 2015"
+output:
+  html_document:
+    keep_md: true
+---
+
+# Expected outcomes
+
+* Knowledge of dplyr
+* Explore journal master files
+* Merge datasets
+
+# dplyr
+
+`dplyr` is an efficient way to work with data in R. Developed by Hadley Wickham et al. it simplifies working with `data.frames` in R. If you have not installed it yet, get it from CRAN:
+
+```{r,eval=FALSE}
+install.packages("dplyr")
+```
+
+```{r}
+library(dplyr)
+```
+
+The package comes with an [excellent introduction to dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/introduction.html), which we follow and apply on journal data.
+
+# Load sources
+
+In bibliometrics, you often need to work with journal lists. For instance, using these list you wish to compare journals according to size and impact, or you want to examine, which journals are open access.
+
+Let's start with loading Neuro Science journals from Scimago into R
+
+```{r}
+neuro <- read.csv("examples/neuro_scimago.csv", header = TRUE, sep = ",", dec = ",")
+dim(neuro)
+head(neuro)
+```
+
+## Convenience function `tbl_df`
+
+`tbl_df` wraps a local data.frame. 
+
+```{r}
+neuro <- tbl_df(neuro)
+neuro
+```
+
+## Filter rows
+
+Select journals with H-index higher than 250
+
+```{r}
+filter(neuro, H.index > 250)
+```
+
+Select journals from the United Kingdom with H-index higher than 250
+
+```{r}
+filter(neuro, H.index > 250, Country == "United Kingdom")
+```
+
+## Select rows
+
+To select rows by position, use `slice`.
+
+```{r}
+slice(neuro, 5:10)
+```
+
+## Arrange rows
+
+`arrange` reorders your data and works similar to `filter()`. To arrange rows in descending order,
+
+```{r}
+arrange(neuro, desc(Total.Docs...2014.)) 
+```
+
+Sort by journal title
+
+```{r}
+arrange(neuro, Title)
+```
+
+
+## Select columns with `select()`
+
+```{r}
+select(neuro, Title, ISSN, SJR)
+```
+
+Select between between `Title` and `H.index`.
+
+```{r}
+select(neuro, Title:H.index)
+```
+
+Exclude column
+
+```{r}
+select(neuro, -ISSN)
+```
+
+Use helper functions to `select` columns:
+
+* `starts_with()`
+* `ends_with()`
+* `matches()`
+* `contains()`
+
+```{r}
+select(neuro, matches("Docs", ignore.case = TRUE))
+```
+
+## Create new columns with mutate()
+
+Calculate number of documents, which do not count as `citable`.
+
+```{r}
+neuro <- mutate(neuro,
+       discard = Total.Docs...3years. - Citable.Docs...3years.)
+sum(neuro$discard)
+```
+
+Get decile ranking according to number of documents in the last year
+
+```{r}
+mutate(neuro, 
+       ranking_docs = ntile(Total.Docs...2014., 10))
+```
+
+## Sampling
+
+Use `sample_n()` for a fixed number and `sample_frac()` for a fixed random sample of rows
+
+```{r}
+sample_n(neuro, 10)
+```
+
+```{r}
+sample_frac(neuro, 0.25)
+```
+
+## Comparing `data.frames`
+
+Let's explore how many of the neuroscience journals indexed in Scimago are listed in the Directory of Open Access journals. For this aim, download the DOAJ master file
+
+### Load DOAJ master file
+
+```{r}
+doaj <- read.csv("examples/doaj.csv", header = TRUE, sep = ",", na.strings = "")
+tbl_df(doaj)
+```
+
+### Match by ISSN
+
+The DOAJ master lists contains both `ISSN`and `EISSN`. Let's select only the `Journal.title`, `Journal.ISSN..print.version.`, `Journal.EISSN..online.version.` and `Journal.article.processing.charges..APCs.` columns.
+
+```{r}
+doaj_short <- select(doaj, 
+                     Journal.title, 
+                     Journal.ISSN..print.version.,
+                     Journal.EISSN..online.version.,
+                     Journal.article.processing.charges..APCs.)
+```
+
+Rename the columns
+
+```{r}
+colnames(doaj_short) <- c("title", "issn", "eissn", "apc")
+doaj_short <- tbl_df(doaj_short)
+```
+
+### Prepare columns for mergeing
+
+Both, `issn` and `eissn` contain the pattern `-`. However, the ISSN column in our neuro dataset looks different. 
+
+```{r}
+head(doaj_short$issn)
+head(neuro$ISSN)
+```
+  
+Let's remove those patterns, which, otherwise, would let our merge fail.
+
+```{r}
+doaj_short <- mutate(doaj_short, 
+       issn = gsub("-","",issn), 
+       eissn = gsub("-","", eissn)
+)
+
+neuro <- mutate(neuro,
+                issn = gsub("ISSN ", "", ISSN))
+```
+
+Filter rows, which either match `issn` or `eissn`column in the `doaj_short`data frame.
+
+```{r}
+filter(neuro, issn %in% doaj_short$issn | issn %in% doaj_short$eissn)
+```
+
+
+
