@@ -1,0 +1,22 @@
+---
+title: "Example Files"
+author: "Martin Fenner"
+date: "5. Oktober 2015"
+output:
+  html_document:
+    keep_md: true
+---
+
+Below are some example datasets for the 2:AM hackathon.
+
+### Monthly data dump from the PLOS ALM service
+
+The Open Access publisher PLOS provides metrics for their articles since 2009. Available via [http://doi.org/10.5281/zenodo.27341](http://doi.org/10.5281/zenodo.27341), or in the example folder. One column for every data source, and one row for every article (currently about 170k).
+
+`examples/alm_report_2015-09-10.csv`
+
+### Monthly data dump from the Making Data Count project
+
+[Making Data Count](http://mdc.lagotto.io) is a National Science Foundation funded project to explore metrics for datasets. Available via [http://doi.org/10.5281/zenodo.30862](http://doi.org/10.5281/zenodo.30862), or in the example folder. One column for every data source, and one row for every article (currently about 150k).
+
+`examples/dlm_report_2015-09-11.csv`
