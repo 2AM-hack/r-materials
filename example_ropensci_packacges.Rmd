@@ -1,0 +1,35 @@
+---
+title: "Example rOpenSci Packages"
+author: "Martin Fenner"
+date: "5. Oktober 2015"
+output:
+  html_document:
+    keep_md: true
+---
+
+[rOpenSci](https://ropensci.org) provides R packages for scholarly APIs, including altmetrics services.
+
+### alm
+A package for the [lagotto](https://github.com/lagotto/lagotto) open source application. The [alm tutorial](https://ropensci.org/tutorials/alm_tutorial.html) is a good starting point.
+
+Install and load the package with 
+```{r}
+#install.packages("alm")
+library(alm)
+```
+
+My default the package talks to the lagotto instance run by the publisher PLOS at `http://alm.plos.org`. You can specify the `url` parameter to talk to a different instance of the Lagotto API, e.g. `http://cls.labs.datacite.org`.
+
+Get metrics for a particular DOI
+```{r}
+out <- alm_ids(doi="10.1371/journal.pone.0029797")
+out$data
+```
+
+get metrics for a set of DOIs
+```{r}
+dois <- c('10.1371/journal.pone.0001543','10.1371/journal.pone.0040117',
+    '10.1371/journal.pone.0029797','10.1371/journal.pone.0039395')
+out <- alm_ids(doi=dois)
+lapply(out$data, head)
+```
