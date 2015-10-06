@@ -90,34 +90,7 @@ library(alm)</code></pre>
 <p>Get metrics for a particular DOI</p>
 <pre class="r"><code>out &lt;- alm_ids(doi=&quot;10.1371/journal.pone.0029797&quot;)
 out$data</code></pre>
-<pre><code>##                       .id  pdf  html readers comments likes  total
-## 1               citeulike    0     0       0        0     0      0
-## 2                crossref    0     0       0        0     0      9
-## 3                  nature    0     0       0        0     0      4
-## 4                  pubmed    0     0       0        0     0      2
-## 5                  scopus    0     0       0        0     0     11
-## 6                 counter 2654 33846       0        0     0  36629
-## 7        researchblogging    0     0       0        0     0      1
-## 8                     pmc  103   813       0        0     0    916
-## 9                facebook    0     0       4        0     0      4
-## 10               mendeley    0     0     108        0     0    108
-## 11                twitter    0     0       0       12     0     12
-## 12              wikipedia    0     0       0        0     0     64
-## 13          scienceseeker    0     0       0        0     0      0
-## 14         relativemetric    0     0       0        0     0 243342
-## 15                  f1000    0     0       0        0     0      0
-## 16               figshare    0    49       0        0     0     49
-## 17              pmceurope    0     0       0        0     0      4
-## 18          pmceuropedata    0     0       0        0     0     49
-## 19            openedition    0     0       0        0     0      0
-## 20              wordpress    0     0       0        0     0      0
-## 21                 reddit    0     0       0        0     0      0
-## 22               datacite    0     0       0        0     0      0
-## 23             copernicus    0     0       0        0     0      0
-## 24        articlecoverage    0     0       0        0     0      0
-## 25 articlecoveragecurated    0     0       0        0     0      0
-## 26          plos_comments    0     0       0        0     0     16
-## 27                  orcid    0     0       0        0     0      0</code></pre>
+<pre><code>## NULL</code></pre>
 <p>get metrics for a set of DOIs</p>
 <pre class="r"><code>dois &lt;- c('10.1371/journal.pone.0001543','10.1371/journal.pone.0040117',
     '10.1371/journal.pone.0029797','10.1371/journal.pone.0039395')
@@ -130,7 +103,7 @@ lapply(out$data, head)</code></pre>
 ## 3    nature   0    0       0        0     0     0
 ## 4    pubmed   0    0       0        0     0    11
 ## 5    scopus   0    0       0        0     0    22
-## 6   counter 510 2740       0        0     0  3281
+## 6   counter 510 2742       0        0     0  3283
 ## 
 ## $`10.1371/journal.pone.0039395`
 ##         .id pdf html readers comments likes total
@@ -148,7 +121,7 @@ lapply(out$data, head)</code></pre>
 ## 3    nature    0     0       0        0     0     4
 ## 4    pubmed    0     0       0        0     0     2
 ## 5    scopus    0     0       0        0     0    11
-## 6   counter 2654 33846       0        0     0 36629
+## 6   counter 2654 33850       0        0     0 36633
 ## 
 ## $`10.1371/journal.pone.0001543`
 ##         .id pdf html readers comments likes total
@@ -158,6 +131,115 @@ lapply(out$data, head)</code></pre>
 ## 4    pubmed   0    0       0        0     0     9
 ## 5    scopus   0    0       0        0     0    13
 ## 6   counter 497 3028       0        0     0  3579</code></pre>
+</div>
+<div id="rcrossref" class="section level3">
+<h3>rcrossref</h3>
+<p>A package for the CrossRef REST API.</p>
+<pre class="r"><code>#install.packages(&quot;rcrossref&quot;)
+library(rcrossref)</code></pre>
+<pre><code>## Warning: package 'rcrossref' was built under R version 3.1.3</code></pre>
+<p>Using DOI content negotiation to get bibtex-formatted metadata.</p>
+<pre class="r"><code>cat(cr_cn(dois = &quot;10.1126/science.169.3946.635&quot;, format = &quot;bibtex&quot;))</code></pre>
+<pre><code>## @article{Frank_1970,
+##  doi = {10.1126/science.169.3946.635},
+##  url = {http://dx.doi.org/10.1126/science.169.3946.635},
+##  year = 1970,
+##  month = {aug},
+##  publisher = {American Association for the Advancement of Science ({AAAS})},
+##  volume = {169},
+##  number = {3946},
+##  pages = {635--641},
+##  author = {H. S. Frank},
+##  title = {The Structure of Ordinary Water: New data and interpretations are yielding new insights into this fascinating substance},
+##  journal = {Science}
+## }</code></pre>
+<p>DOI content negotiation also works with DataCite DOIs.</p>
+<pre class="r"><code>cat(cr_cn(dois = &quot;10.6084/M9.FIGSHARE.758498&quot;, format = &quot;bibtex&quot;))</code></pre>
+<pre><code>## @data{6075de27-781e-4af1-80bd-3160627c5d0f,
+##   doi = {10.6084/M9.FIGSHARE.758498},
+##   url = {http://dx.doi.org/10.6084/M9.FIGSHARE.758498},
+##   author = {Scott Chamberlain; },
+##   publisher = {Figshare},
+##   title = {Sea ice cover of Southern pole in April each year from 1979 to 2013},
+##   year = {2013}
+## }</code></pre>
+<p>Sometimes we need to know whether a DOI is from CrossRef or DataCite (or another registration agency).</p>
+<pre class="r"><code>cr_agency(dois = c(&quot;10.1126/science.169.3946.635&quot;, &quot;10.6084/M9.FIGSHARE.758498&quot;))</code></pre>
+<pre><code>## $`10.1126/science.169.3946.635`
+## $`10.1126/science.169.3946.635`$DOI
+## [1] &quot;10.1126/science.169.3946.635&quot;
+## 
+## $`10.1126/science.169.3946.635`$agency
+## $`10.1126/science.169.3946.635`$agency$id
+## [1] &quot;crossref&quot;
+## 
+## $`10.1126/science.169.3946.635`$agency$label
+## [1] &quot;CrossRef&quot;
+## 
+## 
+## 
+## $`10.6084/M9.FIGSHARE.758498`
+## $`10.6084/M9.FIGSHARE.758498`$DOI
+## [1] &quot;10.6084/m9.figshare.758498&quot;
+## 
+## $`10.6084/M9.FIGSHARE.758498`$agency
+## $`10.6084/M9.FIGSHARE.758498`$agency$id
+## [1] &quot;datacite&quot;
+## 
+## $`10.6084/M9.FIGSHARE.758498`$agency$label
+## [1] &quot;DataCite&quot;</code></pre>
+<p>We can get 50 random DOIs from 2014 with the following:</p>
+<pre class="r"><code>cr_r(sample = 50, from_pub_date='2014-01-01', until_pub_date='2014-12-31')</code></pre>
+<pre><code>##  [1] &quot;10.1109/ase.2008.33&quot;                       
+##  [2] &quot;10.1007/978-3-662-26580-2_2&quot;               
+##  [3] &quot;10.1098/rspb.2005.3142&quot;                    
+##  [4] &quot;10.1130/2014.1211(07)&quot;                     
+##  [5] &quot;10.4028/www.scientific.net/amr.726-731.882&quot;
+##  [6] &quot;10.3126/njr.v1i1.6316&quot;                     
+##  [7] &quot;10.1121/1.386688&quot;                          
+##  [8] &quot;10.1007/s00268-008-9901-5&quot;                 
+##  [9] &quot;10.3906/kim-1303-32&quot;                       
+## [10] &quot;10.1371/journal.pone.0091796.g003&quot;         
+## [11] &quot;10.1007/bf03347162&quot;                        
+## [12] &quot;10.1371/journal.pone.0109081.g006&quot;         
+## [13] &quot;10.1201/b14695-42&quot;                         
+## [14] &quot;10.1017/s0031182000023222&quot;                 
+## [15] &quot;10.5962/bhl.title.9340&quot;                    
+## [16] &quot;10.1016/s1464-2859(00)80045-0&quot;             
+## [17] &quot;10.2991/emeit.2012.398&quot;                    
+## [18] &quot;10.1016/s0011-9164(06)01182-9&quot;             
+## [19] &quot;10.1109/icecs.2000.911467&quot;                 
+## [20] &quot;10.2307/2159627&quot;                           
+## [21] &quot;10.1016/s0300-9572(96)00998-7&quot;             
+## [22] &quot;10.1109/vetec.1996.501514&quot;                 
+## [23] &quot;10.1027/1618-3169.52.3.195&quot;                
+## [24] &quot;10.1016/j.apergo.2012.07.005&quot;              
+## [25] &quot;10.1136/bmj.1.587.344&quot;                     
+## [26] &quot;10.1109/62.587055&quot;                         
+## [27] &quot;10.1002/chin.200908171&quot;                    
+## [28] &quot;10.2139/ssrn.977224&quot;                       
+## [29] &quot;10.1039/ct9089301659&quot;                      
+## [30] &quot;10.1109/25.350272&quot;                         
+## [31] &quot;10.1117/12.264178&quot;                         
+## [32] &quot;10.1016/s0957-4166(00)82222-3&quot;             
+## [33] &quot;10.1139/e76-066&quot;                           
+## [34] &quot;10.1504/ijvas.2011.038177&quot;                 
+## [35] &quot;10.1016/j.bbrc.2009.02.138&quot;                
+## [36] &quot;10.1180/claymin.1976.011.1.01&quot;             
+## [37] &quot;10.1111/j.1467-9345.1967.tb00314.x&quot;        
+## [38] &quot;10.1016/s0147-1767(00)00022-5&quot;             
+## [39] &quot;10.1002/ecja.4410790205&quot;                   
+## [40] &quot;10.1163/1574-9347_bnp_e608640&quot;             
+## [41] &quot;10.4000/traduire.460&quot;                      
+## [42] &quot;10.1186/isrctn48145465&quot;                    
+## [43] &quot;10.3934/dcds.2007.18.627&quot;                  
+## [44] &quot;10.1002/prac.18410230131&quot;                  
+## [45] &quot;10.1016/0031-9422(93)85263-q&quot;              
+## [46] &quot;10.1097/00005392-200205000-00050&quot;          
+## [47] &quot;10.1139/o91-126&quot;                           
+## [48] &quot;10.1007/bf01430380&quot;                        
+## [49] &quot;10.1007/s11005-006-0130-2&quot;                 
+## [50] &quot;10.1111/nous.12020&quot;</code></pre>
 </div>
 
 
