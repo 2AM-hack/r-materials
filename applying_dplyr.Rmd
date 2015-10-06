@@ -11,6 +11,7 @@ output:
 
 * Knowledge of dplyr
 * Explore journal master files
+* Anomyze data
 * Merge datasets
 
 # dplyr
@@ -129,6 +130,13 @@ Get decile ranking according to number of documents in the last year
 ```{r}
 mutate(neuro, 
        ranking_docs = ntile(Total.Docs...2014., 10))
+```
+
+Generate random ids
+
+```{r}
+mutate(neuro,
+       ids = stringi::stri_rand_strings(nrow(neuro), 8))
 ```
 
 ## Sampling

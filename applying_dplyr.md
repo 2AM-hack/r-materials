@@ -6,6 +6,7 @@ Najko Jahn
 
 * Knowledge of dplyr
 * Explore journal master files
+* Anomyze data
 * Merge datasets
 
 # dplyr
@@ -402,6 +403,36 @@ mutate(neuro,
 ##   Ref....Doc. (dbl), Country (fctr), discard (int), ranking_docs (int)
 ```
 
+Generate random ids
+
+
+```r
+mutate(neuro,
+       ids = stringi::stri_rand_strings(nrow(neuro), 8))
+```
+
+```
+## Source: local data frame [509 x 16]
+## 
+##     Rank                                 Title   Type          ISSN    SJR
+##    (int)                                (fctr) (fctr)        (fctr)  (dbl)
+## 1      1           Nature Reviews Neuroscience      j ISSN 14710048 17.100
+## 2      2         Annual Review of Neuroscience      k ISSN 15454126 15.637
+## 3      3                   Nature Neuroscience      j ISSN 10976256 10.503
+## 4      4                                Neuron      j ISSN 08966273 10.229
+## 5      5          Trends in Cognitive Sciences      j ISSN 1879307X  9.243
+## 6      6               Trends in Neurosciences      j ISSN 01662236  8.097
+## 7      7 Biology of Mood and Anxiety Disorders      j ISSN 20455380  7.124
+## 8      8                          EMBO Journal      j ISSN 14602075  6.861
+## 9      9                  Molecular Psychiatry      j ISSN 14765578  5.930
+## 10    10                          PLoS Biology      j ISSN 15457885  5.505
+## ..   ...                                   ...    ...           ...    ...
+## Variables not shown: H.index (int), Total.Docs...2014. (int),
+##   Total.Docs...3years. (int), Total.Refs. (int), Total.Cites..3years.
+##   (int), Citable.Docs...3years. (int), Cites...Doc...2years. (dbl),
+##   Ref....Doc. (dbl), Country (fctr), discard (int), ids (chr)
+```
+
 ## Sampling
 
 Use `sample_n()` for a fixed number and `sample_frac()` for a fixed random sample of rows
@@ -414,18 +445,18 @@ sample_n(neuro, 10)
 ```
 ## Source: local data frame [10 x 15]
 ## 
-##     Rank                                                     Title   Type
-##    (int)                                                    (fctr) (fctr)
-## 1    361                          Journal of Eye Movement Research      j
-## 2    178                                          BMC Neuroscience      j
-## 3    238      Journal of Clinical and Experimental Neuropsychology      j
-## 4    458                           Shanghai Archives of Psychiatry      j
-## 5     46                                          Molecular Autism      j
-## 6    229                                          Visual Cognition      j
-## 7    126                                          Hearing Research      j
-## 8    472                                                     Avant      j
-## 9     36                                                      Pain      j
-## 10   432 International Journal on Disability and Human Development      j
+##     Rank                                              Title   Type
+##    (int)                                             (fctr) (fctr)
+## 1     94                                Social Neuroscience      j
+## 2    257                                  Epilepsy Research      j
+## 3     33                                               Glia      j
+## 4    325 Journal of Neuroscience, Psychology, and Economics      j
+## 5    342               Journal of Mathematical Neuroscience      j
+## 6    189                                Psychiatry Research      j
+## 7    485             Hot Topics in Neurology and Psychiatry      k
+## 8    223                             Frontiers in Neurology      j
+## 9    227                                      Neuro-Signals      j
+## 10   339          Canadian Journal of Neurological Sciences      j
 ## Variables not shown: ISSN (fctr), SJR (dbl), H.index (int),
 ##   Total.Docs...2014. (int), Total.Docs...3years. (int), Total.Refs. (int),
 ##   Total.Cites..3years. (int), Citable.Docs...3years. (int),
@@ -443,16 +474,16 @@ sample_frac(neuro, 0.25)
 ## 
 ##     Rank
 ##    (int)
-## 1    432
-## 2      4
-## 3      8
-## 4     21
-## 5    126
-## 6    508
-## 7    235
-## 8    188
-## 9     71
-## 10   200
+## 1    462
+## 2     96
+## 3    459
+## 4      1
+## 5     69
+## 6    301
+## 7     65
+## 8    119
+## 9    251
+## 10   222
 ## ..   ...
 ## Variables not shown: Title (fctr), Type (fctr), ISSN (fctr), SJR (dbl),
 ##   H.index (int), Total.Docs...2014. (int), Total.Docs...3years. (int),
