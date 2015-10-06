@@ -1,8 +1,8 @@
 ---
-title: "WoutLamersMarkdown"
-author: "WoutLamers"
-date: "6 oktober 2015"
-output:
+title: "Mark down test"
+author: "Stefanie"
+date: "October 6, 2015"
+output: 
   html_document:
     keep_md: true
 ---
@@ -22,5 +22,3 @@ plot(cars)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-So we can just add stuff here, and edit things, right?
