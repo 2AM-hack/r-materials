@@ -33,3 +33,31 @@ dois <- c('10.1371/journal.pone.0001543','10.1371/journal.pone.0040117',
 out <- alm_ids(doi=dois)
 lapply(out$data, head)
 ```
+
+### rcrossref
+
+A package for the CrossRef REST API.
+```{r}
+#install.packages("rcrossref")
+library(rcrossref)
+```
+
+Using DOI content negotiation to get bibtex-formatted metadata.
+```{r}
+cat(cr_cn(dois = "10.1126/science.169.3946.635", format = "bibtex"))
+```
+
+DOI content negotiation also works with DataCite DOIs.
+```{r}
+cat(cr_cn(dois = "10.6084/M9.FIGSHARE.758498", format = "bibtex"))
+```
+
+Sometimes we need to know whether a DOI is from CrossRef or DataCite (or another registration agency).
+```{r}
+cr_agency(dois = c("10.1126/science.169.3946.635", "10.6084/M9.FIGSHARE.758498"))
+```
+
+We can get 50 random DOIs from 2014 with the following:
+```{r}
+cr_r(sample = 50, from_pub_date='2014-01-01', until_pub_date='2014-12-31')
+```
